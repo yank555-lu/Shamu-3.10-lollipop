@@ -654,3 +654,10 @@ service pre-recovery /system/bin/uncrypt
     class main
     disabled
     oneshot
+    
+# Start kernel configuration
+service yank555-kernel /res/sbin/sh /system/etc/init.yank555.lu.kernel.sh
+    class late_start
+    user root
+    group root
+    oneshot

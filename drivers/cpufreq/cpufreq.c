@@ -329,6 +329,23 @@ void cpufreq_notify_transition(struct cpufreq_policy *policy,
 }
 EXPORT_SYMBOL_GPL(cpufreq_notify_transition);
 
+/* Yank555.lu : INTELLI_THERMAL - replace msm_cpufreq_set_limits missing on shamu */
+#ifdef CONFIG_INTELLI_THERMAL
+extern int msm_thermal_set_freq_limits(uint32_t cpu, uint32_t max)
+{
+	struct cpufreq_policy *policy;
+
+	policy = cpufreq_cpu_get(cpu);
+	if (policy != NULL) {
+		if (max == INTELLI_THERMAL_CPUFREQ_NO_LIMIT)
+			cpufreq_verify_within_limits(policy, policy->min, policy->cpuinfo.max_freq);
+		else
+			cpufreq_verify_within_limits(policy, policy->min, max);
+		return 0;
+	}
+	return 1;
+}
+#endif
 
 /*********************************************************************
  *                          SYSFS INTERFACE                          *

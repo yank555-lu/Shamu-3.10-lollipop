@@ -469,4 +469,10 @@ static inline int cpufreq_generic_exit(struct cpufreq_policy *policy)
 	return 0;
 }
 
+/* Yank555.lu : INTELLI_THERMAL - replace msm_cpufreq_set_limits missing on shamu */
+#ifdef CONFIG_INTELLI_THERMAL
+#define INTELLI_THERMAL_CPUFREQ_NO_LIMIT 0xFFFFFFFF
+extern int msm_thermal_set_freq_limits(uint32_t cpu, uint32_t max);
+#endif
+
 #endif /* _LINUX_CPUFREQ_H */

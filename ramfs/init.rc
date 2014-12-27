@@ -426,6 +426,12 @@ on boot
     chown system system /sys/kernel/ipv4/tcp_rmem_max
     chown root radio /proc/cmdline
 
+    # Yank555.lu - Set ownership for charging LED (Credits to imoseyon)
+    chown system system /sys/class/leds/charging/brightness
+    chown system system /sys/class/leds/charging/max_brightness
+    write /sys/class/leds/charging/max_brightness 1
+    write /sys/class/leds/charging/trigger battery-charging
+
     # Define default initial receive window size in segments.
     setprop net.tcp.default_init_rwnd 60
 

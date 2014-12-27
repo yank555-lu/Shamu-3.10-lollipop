@@ -87,8 +87,10 @@ on property:dev.bootcomplete=1
     write /sys/devices/system/cpu/cpufreq/interactive/target_loads "85 1500000:90 1800000:70"
     write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 40000
     write /sys/module/cpu_boost/parameters/boost_ms 20
-    write /sys/module/cpu_boost/parameters/sync_threshold 1728000
+# Yank555.lu - don't use that excessively high sync freq.
+    write /sys/module/cpu_boost/parameters/sync_threshold 1190400
     write /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor 100000
-    write /sys/module/cpu_boost/parameters/input_boost_freq 1497600
+# Yank555.lu - In case input boost is compiled, keep it to use lower freq.
+    write /sys/module/cpu_boost/parameters/input_boost_freq 883200
     write /sys/module/cpu_boost/parameters/input_boost_ms 40
     write /dev/cpuctl/apps/cpu.notify_on_migrate 1

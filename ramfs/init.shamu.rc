@@ -135,6 +135,8 @@ on boot
     chown bluetooth net_bt_stack /proc/bluetooth/sleep/btwrite
     chown bluetooth net_bt_stack /sys/module/hci_uart/parameters/ath_lpm
     chown bluetooth net_bt_stack /sys/module/hci_uart/parameters/ath_btwrite
+    chown system system /sys/class/leds/charging/brightness
+    chown system system /sys/class/leds/charging/max_brightness
     chown system system /sys/module/sco/parameters/disable_esco
     chown bluetooth net_bt_stack /sys/module/hci_smd/parameters/hcismd_set
     chmod 0660 /sys/module/bluetooth_power/parameters/power
@@ -176,6 +178,10 @@ on boot
     chown system system /sys/bus/i2c/devices/1-004a/tsp
 
     chmod 0444 /sys/devices/platform/msm_hsusb/gadget/usb_state
+
+    # e/frandom permissions
+    chmod 444 /dev/erandom
+    chmod 444 /dev/frandom
 
     # Allow QMUX daemon to assign port open wait time
     chown radio radio /sys/devices/virtual/hsicctl/hsicctl0/modem_wait
@@ -244,6 +250,8 @@ on boot
     chown media media /sys/devices/c55_ctrl/gpio_c55_int/value
     chown media media /sys/devices/c55_ctrl/gpio_core/value
     chown media media /sys/devices/c55_ctrl/gpio_reset/value
+
+    chmod 0644 /proc/cmdline
 
 # subsystem ramdump collection
 on property:persist.sys.qc.sub.rdump.on=*

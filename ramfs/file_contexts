@@ -252,7 +252,7 @@
 /mnt/asec/[^/]+/[^/]+\.zip  u:object_r:asec_public_file:s0
 /mnt/asec/[^/]+/lib(/.*)?   u:object_r:asec_public_file:s0
 /data/app-asec(/.*)?        u:object_r:asec_image_file:s0
-#line 1 "device/moto/shamu/sepolicy/file_contexts"
+#line 1 "device/motorola/shamu/sepolicy/file_contexts"
 /data/cam_socket[23]           u:object_r:camera_socket:s0
 /data/diag_logs(/.*)?          u:object_r:diag_logs:s0
 /data/nfc(/.*)?                u:object_r:nfc_data_file:s0

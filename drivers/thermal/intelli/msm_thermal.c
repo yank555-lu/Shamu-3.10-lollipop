@@ -25,6 +25,7 @@
 #include <linux/cpufreq.h>
 #include <linux/msm_tsens.h>
 #include <linux/msm_thermal.h>
+#include <mach/cpufreq.h>
 
 #define DEFAULT_POLLING_MS	500
 /* last 3 minutes based on 250ms polling cycle */
@@ -50,7 +51,7 @@ static struct msm_thermal_data msm_thermal_info = {
 	.core_temp_hysteresis_degC = 10,
 	.core_control_mask = 0xe,
 };
-static uint32_t limited_max_freq_thermal = INTELLI_THERMAL_CPUFREQ_NO_LIMIT;
+static uint32_t limited_max_freq_thermal = MSM_CPUFREQ_NO_LIMIT;
 static struct delayed_work check_temp_work;
 static struct workqueue_struct *intellithermal_wq;
 static bool core_control_enabled;
@@ -103,12 +104,12 @@ static int update_cpu_max_freq(int cpu, uint32_t max_freq)
 {
 	int ret = 0;
 
-	ret = msm_thermal_set_freq_limits(cpu, max_freq);
+	ret = msm_cpufreq_set_freq_limits(cpu, MSM_CPUFREQ_NO_LIMIT, max_freq);
 	if (ret)
 		return ret;
 
 	limited_max_freq_thermal = max_freq;
-	if (max_freq != INTELLI_THERMAL_CPUFREQ_NO_LIMIT)
+	if (max_freq != MSM_CPUFREQ_NO_LIMIT)
 		pr_info("%s: Limiting cpu%d max frequency to %d\n",
 				KBUILD_MODNAME, cpu, max_freq);
 	else
@@ -205,7 +206,7 @@ static void __ref do_freq_control(long temp)
 		limit_idx += msm_thermal_info.freq_step;
 		if (limit_idx >= limit_idx_high) {
 			limit_idx = limit_idx_high;
-			max_freq = INTELLI_THERMAL_CPUFREQ_NO_LIMIT;
+			max_freq = MSM_CPUFREQ_NO_LIMIT;
 		} else
 			max_freq = table[limit_idx].frequency;
 	}
@@ -303,7 +304,7 @@ static void __ref disable_msm_thermal(void)
 	flush_workqueue(intellithermal_wq);
 
 	for_each_possible_cpu(cpu) {
-		update_cpu_max_freq(cpu, INTELLI_THERMAL_CPUFREQ_NO_LIMIT);
+		update_cpu_max_freq(cpu, MSM_CPUFREQ_NO_LIMIT);
 	}
 }
 

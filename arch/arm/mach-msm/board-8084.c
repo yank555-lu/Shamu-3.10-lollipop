@@ -132,11 +132,7 @@ void __init apq8084_add_drivers(void)
 	else
 		msm_clock_init(&apq8084_clock_init_data);
 	tsens_tm_init_driver();
-#ifdef CONFIG_INTELLI_THERMAL
-	msm_thermal_init(NULL);
-#else
 	msm_thermal_device_init();
-#endif
 #if defined(CONFIG_LCD_KCAL)
 	shamu_add_lcd_kcal_devices();
 #endif

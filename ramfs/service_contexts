@@ -103,7 +103,7 @@ sip                                       u:object_r:radio_service:s0
 statusbar                                 u:object_r:system_server_service:s0
 SurfaceFlinger                            u:object_r:surfaceflinger_service:s0
 task                                      u:object_r:system_server_service:s0
-telecom                                   u:object_r:radio_service:s0
+telecom                                   u:object_r:system_server_service:s0
 telephony.registry                        u:object_r:system_server_service:s0
 textservices                              u:object_r:system_server_service:s0
 trust                                     u:object_r:system_server_service:s0
@@ -123,7 +123,8 @@ wifi                                      u:object_r:system_server_service:s0
 window                                    u:object_r:system_server_service:s0
 
 *                                         u:object_r:default_android_service:s0
-#line 1 "device/motorola/shamu/sepolicy/service_contexts"
+#line 1 "device/moto/shamu/sepolicy/service_contexts"
 rcs                                       u:object_r:radio_service:s0
+AtCmdFwd                                  u:object_r:atfwd_service:s0
 #line 1 "vendor/slim/sepolicy/service_contexts"
 torch                                     u:object_r:system_server_service:s0

@@ -119,25 +119,18 @@ on init
     mount cgroup none /dev/cpuctl cpu
     chown system system /dev/cpuctl
     chown system system /dev/cpuctl/tasks
-    chmod 0660 /dev/cpuctl/tasks
+    chmod 0666 /dev/cpuctl/tasks
     write /dev/cpuctl/cpu.shares 1024
-    write /dev/cpuctl/cpu.rt_runtime_us 950000
+    write /dev/cpuctl/cpu.rt_runtime_us 800000
     write /dev/cpuctl/cpu.rt_period_us 1000000
 
-    mkdir /dev/cpuctl/apps
-    chown system system /dev/cpuctl/apps/tasks
-    chmod 0666 /dev/cpuctl/apps/tasks
-    write /dev/cpuctl/apps/cpu.shares 1024
-    write /dev/cpuctl/apps/cpu.rt_runtime_us 800000
-    write /dev/cpuctl/apps/cpu.rt_period_us 1000000
-
-    mkdir /dev/cpuctl/apps/bg_non_interactive
-    chown system system /dev/cpuctl/apps/bg_non_interactive/tasks
-    chmod 0666 /dev/cpuctl/apps/bg_non_interactive/tasks
+    mkdir /dev/cpuctl/bg_non_interactive
+    chown system system /dev/cpuctl/bg_non_interactive/tasks
+    chmod 0666 /dev/cpuctl/bg_non_interactive/tasks
     # 5.0 %
-    write /dev/cpuctl/apps/bg_non_interactive/cpu.shares 52
-    write /dev/cpuctl/apps/bg_non_interactive/cpu.rt_runtime_us 700000
-    write /dev/cpuctl/apps/bg_non_interactive/cpu.rt_period_us 1000000
+    write /dev/cpuctl/bg_non_interactive/cpu.shares 52
+    write /dev/cpuctl/bg_non_interactive/cpu.rt_runtime_us 700000
+    write /dev/cpuctl/bg_non_interactive/cpu.rt_period_us 1000000
 
     # qtaguid will limit access to specific data based on group memberships.
     #   net_bw_acct grants impersonation of socket owners.
@@ -257,7 +250,6 @@ on post-fs-data
     # create basic filesystem structure
     mkdir /data/misc 01771 system misc
     mkdir /data/misc/adb 02750 system shell
-    mkdir /data/misc/audit 02750 audit system
     mkdir /data/misc/bluedroid 0770 bluetooth net_bt_stack
     mkdir /data/misc/bluetooth 0770 system system
     mkdir /data/misc/keystore 0700 keystore keystore
@@ -289,7 +281,6 @@ on post-fs-data
     mkdir /data/app-lib 0771 system system
     mkdir /data/app 0771 system system
     mkdir /data/property 0700 root root
-    mkdir /data/radio 0770 radio radio
 
     # create dalvik-cache, so as to enforce our permissions
     mkdir /data/dalvik-cache 0771 root root
@@ -311,6 +302,8 @@ on post-fs-data
     # the following directory.
     mkdir /data/mediadrm 0770 mediadrm mediadrm
 
+    mkdir /data/adb 0700 root root
+
     # symlink to bugreport storage location
     symlink /data/data/com.android.shell/files/bugreports /data/bugreports
 
@@ -322,18 +315,12 @@ on post-fs-data
 
     # Set SELinux security contexts on upgrade or policy update.
     restorecon_recursive /data
-    restorecon /data/data
-    restorecon /data/user
-    restorecon /data/user/0
 
     # If there is no fs-post-data action in the init.<device>.rc file, you
     # must uncomment this line, otherwise encrypted filesystems
     # won't work.
     # Set indication (checked by vold) that we have finished this action
     #setprop vold.post_fs_data_done 1
-
-# Include extra init file
-    import /init.slim.rc
 
 on boot
     # basic network init
@@ -398,19 +385,10 @@ on boot
     chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
 
     # Assume SMP uses shared cpufreq policy for all CPUs
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-
-    chown system system /sys/block/mmcblk0/queue/scheduler
-    chmod 0664 /sys/block/mmcblk0/queue/scheduler
+    chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 
     chown system system /sys/class/timed_output/vibrator/enable
-    chown system system /sys/class/leds/charging/brightness
-    chown system system /sys/class/leds/charging/max_brightness
     chown system system /sys/class/leds/keyboard-backlight/brightness
     chown system system /sys/class/leds/lcd-backlight/brightness
     chown system system /sys/class/leds/button-backlight/brightness
@@ -514,10 +492,6 @@ service console /system/bin/sh
     group shell log
     seclabel u:r:shell:s0
 
-service auditd /system/bin/auditd -k
-    seclabel u:r:logd:s0
-    class main
-
 on property:ro.debuggable=1
     start console
 
@@ -571,7 +545,7 @@ service ril-daemon /system/bin/rild
     socket rild stream 660 root radio
     socket rild-debug stream 660 radio system
     user root
-    group radio cache inet misc audio sdcard_rw qcom_oncrpc qcom_diag log
+    group radio cache inet misc audio log
 
 service surfaceflinger /system/bin/surfaceflinger
     class core
@@ -587,7 +561,7 @@ service drm /system/bin/drmserver
 service media /system/bin/mediaserver
     class main
     user media
-    group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc qcom_diag mediadrm
+    group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm
     ioprio rt 4
 
 # One shot invocation to deal with encrypted volume.

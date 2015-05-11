@@ -246,6 +246,8 @@ on boot
     chown media media /sys/devices/c55_ctrl/gpio_core/value
     chown media media /sys/devices/c55_ctrl/gpio_reset/value
 
+    chmod 0644 /proc/cmdline
+
     # LED permissions
     chmod 664 /sys/class/leds/red/brightness
     chmod 664 /sys/class/leds/green/brightness

@@ -334,7 +334,6 @@ EXPORT_SYMBOL_GPL(cpufreq_notify_transition);
 #ifdef CONFIG_CPUFREQ_HARDLIMIT
 extern void update_scaling_limits(unsigned int freq_min, unsigned int freq_max)
 {
-	int cpu;
 	struct cpufreq_policy *policy;
 
 	// Updating CPU0 policy only, since all other CPUs will be set accordingly
@@ -343,8 +342,7 @@ extern void update_scaling_limits(unsigned int freq_min, unsigned int freq_max)
 	policy = cpufreq_cpu_get(0);
 	if (policy != NULL) {
 		#ifdef CONFIG_CPUFREQ_HARDLIMIT_DEBUG
-		pr_info("[HARDLIMIT] cpufreq.c cpu%d - update_scaling_limits : old_min = %u / old_max = %u / new_min = %u / new_max = %u \n",
-				cpu,
+		pr_info("[HARDLIMIT] cpufreq.c - update_scaling_limits : old_min = %u / old_max = %u / new_min = %u / new_max = %u \n",
 				policy->min,
 				policy->max,
 				freq_min,

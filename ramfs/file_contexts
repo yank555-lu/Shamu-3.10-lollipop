@@ -415,6 +415,26 @@
 
 /system/bin/imsdatadaemon                       u:object_r:ims_exec:s0
 /system/bin/imsqmidaemon                        u:object_r:ims_exec:s0
+
+# TapToWake
+/sys/devices/f9966000.i2c/i2c-1/1-004a/tsp               u:object_r:tap2wake_dev:s0
+
+# for Settings' access to VibratorHW
+/sys/vibrator/pwmvalue                                   u:object_r:sysfs_vibrator:s0
+
+# for Settings' access to DisplayColorCalibration
+/sys/devices/platform/kcal_ctrl.0/kcal                   u:object_r:sysfs_display:s0
+/sys/devices/platform/kcal_ctrl.0/kcal_enable            u:object_r:sysfs_display:s0
+/sys/devices/platform/kcal_ctrl.0/kcal_cont              u:object_r:sysfs_display:s0
+/sys/devices/platform/kcal_ctrl.0/kcal_hue               u:object_r:sysfs_display:s0
+/sys/devices/platform/kcal_ctrl.0/kcal_invert            u:object_r:sysfs_display:s0
+/sys/devices/platform/kcal_ctrl.0/kcal_min               u:object_r:sysfs_display:s0
+/sys/devices/platform/kcal_ctrl.0/kcal_sat               u:object_r:sysfs_display:s0
+/sys/devices/platform/kcal_ctrl.0/kcal_val               u:object_r:sysfs_display:s0
+
+# Sunlight Mode
+/sys/devices/virtual/graphics/fb0/hbm                    u:object_r:sysfs_display:s0
+
 #line 1 "vendor/slim/sepolicy/file_contexts"
 /cache/dalvik-cache(/.*)? u:object_r:dalvikcache_data_file:s0
 
